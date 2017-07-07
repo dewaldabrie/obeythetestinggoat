@@ -1,0 +1,2 @@
+https://www.obeythetestinggoat.com/book/chapter_working_incrementally.html
+Each List Should Have Its Own URL
