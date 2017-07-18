@@ -1,2 +1,2 @@
-https://www.obeythetestinggoat.com/book/chapter_working_incrementally.html
-Each List Should Have Its Own URL
+https://www.obeythetestinggoat.com/book/chapter_manual_deployment.html
+As Always, Start with a Test
