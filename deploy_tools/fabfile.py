@@ -1,3 +1,7 @@
+"""
+Use like so:
+   $ fab deploy:host=superlists-staging.experimentation.space -u dewald -i ~/.ssh/MyAmznKeyPair.pem
+"""
 from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run
 import random
