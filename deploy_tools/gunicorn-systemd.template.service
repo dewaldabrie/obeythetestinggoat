@@ -3,11 +3,11 @@ Description=Gunicorn server for SITENAME
 
 [Service]
 Restart=on-failure
-User=dewald
-WorkingDirectory=/home/elspeth/sites/SITENAME/source
-ExecStart=/home/dewald/sites/SITENAME/virtualenv/bin/gunicorn \
+User=USER
+WorkingDirectory=/home/USER/sites/SITENAME/source
+ExecStart=/home/USER/sites/SITENAME/virtualenv/bin/gunicorn \
     --bind unix:/tmp/SITENAME.socket \
-    superlists.wsgi:application
+    DJANGO_APP_NAME.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
