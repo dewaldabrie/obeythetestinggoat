@@ -19,6 +19,7 @@ django_app_name=$3  # name of app containing wsgi.py
 # Install Python3.6, venv, and nginx
 echo "Installing Python3.6"
 sudo add-apt-repository -y ppa:fkrull/deadsnakes
+sudo apt-get update
 sudo apt-get install -y nginx git python3.6 python3.6-venv
 
 # Use nginx template to configure server to serve our site
