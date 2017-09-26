@@ -20,9 +20,38 @@ user=$2  # pass unix username on server
 django_app_name=$3  # name of app containing wsgi.py
 
 
+# And we write the Systemd service, with another sed:
+echo "-------------------------------"
+echo "Configure gunicorn auto startup"
+echo "-------------------------------"
+sed -e "s/SITENAME/$url/g" \
+    -e "s/USER/$user/g" \
+    -e "s/DJANGO_APP_NAME/$django_app_name/g" \
+    gunicorn-systemd.template.service \
+    | sudo tee /etc/systemd/system/gunicorn-$url.service
+
+# Check validity of service configuration
+echo "-------------------------"
+echo "Check auto-startup config"
+echo "-------------------------"
+systemd-analyze verify /etc/systemd/system/gunicorn-$url.service
+
+
+
 # bind gunicorn to unix socket (for talking to nginx)
+echo "--------------------------------------------"
 echo "Bind guinicorn webapp to nginx's unix socket"
+echo "--------------------------------------------"
+
+# Finally we start both services:
+echo "----------------------------------------"
+echo "Reloading services to effect new configs"
+echo "----------------------------------------"
+sudo systemctl enable gunicorn-$url
+sudo systemctl start gunicorn-$url
 sudo systemctl reload nginx
-cd /home/$user/sites/$url/source
-/home/$user/sites/$url/virtualenv/bin/gunicorn --bind \
-    unix:/tmp/$url.socket $django_app_name.wsgi:application
+
+echo "----------------------------------------"
+echo "Rebooting ..."
+echo "----------------------------------------"
+sudo reboot

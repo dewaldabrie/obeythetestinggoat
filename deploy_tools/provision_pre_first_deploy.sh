@@ -17,7 +17,9 @@ user=$2  # pass unix username on server
 django_app_name=$3  # name of app containing wsgi.py
 
 # Install Python3.6, venv, and nginx
+echo "--------------------"
 echo "Installing Python3.6"
+echo "--------------------"
 sudo add-apt-repository -y ppa:fkrull/deadsnakes
 sudo apt-get update
 sudo apt-get install -y nginx git python3.6 python3.6-venv
@@ -29,7 +31,9 @@ sudo apt-get install -y nginx git python3.6 python3.6-venv
 # We pipe (|) the output of that to a root-user process (sudo),
 # which uses tee to write what’s piped to it to a file,
 # in this case the Nginx sites-available virtualhost config file.
+echo "-----------------"
 echo "Configuring nginx"
+echo "-----------------"
 sed -e "s/SITENAME/$url/g" \
     -e "s/USER/$user/g" \
     nginx.template.conf \
@@ -43,24 +47,15 @@ sudo ln -s /etc/nginx/sites-available/$url \
 sudo rm /etc/nginx/sites-enabled/default
 
 # Test nginx config
+echo "---------------------"
 echo "Checking nginx config"
+echo "---------------------"
 sudo nginx -t
 
-# And we write the Systemd service, with another sed:
-echo "Configure gunicorn auto startup"
-sed -e "s/SITENAME/$url/g" \
-    -e "s/USER/$user/g" \
-    -e "s/DJANGO_APP_NAME/$django_app_name/g" \
-    gunicorn-systemd.template.service \
-    | sudo tee /etc/systemd/system/gunicorn-$url.service
-
-# Check validity of service configuration
-echo "Check auto-startup config"
-systemd-analyze verify /etc/systemd/system/gunicorn-$url.service
 
 # Finally we start both services:
+echo "----------------------------------------"
 echo "Reloading services to effect new configs"
+echo "----------------------------------------"
 sudo systemctl daemon-reload
 sudo systemctl reload nginx
-sudo systemctl enable gunicorn-$url
-sudo systemctl start gunicorn-$url
