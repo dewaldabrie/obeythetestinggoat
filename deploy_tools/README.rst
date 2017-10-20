@@ -42,15 +42,18 @@ Next, run the fab deployment from your local pc::
     $ cd deploy_tools
     $ fab deploy:host=superlists.wonderous.website -u dewald -i ~/.ssh/MyAmznKeyPair.pem
 
-Finally, reboot the remote instance, or run the post_provisioning script similar to the pre-provisioning
-above.
+Finally, run the post_provisioning script similar to the pre-provisioning
+above::
+
+    $ chmod +x provision_post_first_deploy.sh
+    $ ./provision_post_first_deploy.sh superlists.wonderous.website dewald superlists
 
 Remember to attach port-80 security group to Amazon EC2 instance.
 
-Usage
-`````
+Useing Ansible
+``````````````
+Do the pre- and post-provisioning with Ansible like so::
 
-On a new amazon instance (with elastic ip and hosting space and domain record configured)
-Copy to server like so::
-
-    $ scp -r -i ~/.ssh/MyAmznKeyPair.pem deploy_tools dewald@52.25.219.198:/home/dewald
+    $ ansible-playbook -i inventory.ansible provision_pre.ansible.yml --limit=staging --ask-become-pass
+    $ fab deploy:host=superlists.wonderous.website -u dewald -i ~/.ssh/MyAmznKeyPair.pem
+    $ ansible-playbook -i inventory.ansible provision_post.ansible.yml --limit=staging --ask-become-pass
