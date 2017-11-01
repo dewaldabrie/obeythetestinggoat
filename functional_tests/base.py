@@ -33,7 +33,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         start_time = time.time()
         while True:
             try:
-                return()
+                return fn()
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
                     raise e
