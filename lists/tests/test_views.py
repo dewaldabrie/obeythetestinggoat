@@ -1,12 +1,19 @@
 from django.test import TestCase
 from django.utils.html import escape
 from lists.models import Item, List
+from lists.forms import ItemForm
+
 
 class HomePageTest(TestCase):
 
     def test_home_page_returns_correct_html(self):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
+
+    def test_home_page_uses_item_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], ItemForm)
+
 
 class ListViewTest(TestCase):
 
@@ -91,3 +98,5 @@ class ListViewTest(TestCase):
         self.client.post('/lists/%d/' % list_.id, data={'item_text': 'First'})
         self.client.post('/lists/%d/' % list_.id, data={'item_text': ''})
         self.assertEqual(Item.objects.count(), 1)
+
+
